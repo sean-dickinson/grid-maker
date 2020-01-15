@@ -11,7 +11,6 @@ function drawLines() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const size = Math.floor(width / numLines);
     const offset = (width % numLines) / 2;
-    console.log(offset);
     ctx.lineWidth = 1;
 
     for (let x = offset; x <= width - offset; x += size) {
