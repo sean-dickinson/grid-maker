@@ -131,10 +131,14 @@ function getCell(pos) {
 function shade(event) {
 
     const pos = getPosition(event);
-    // console.log(pos);
+    if(pos.x < 0 || pos.y < 0){
+        return
+    }
     const cell = getCell(pos);
     cell.fillStyle = selectedShade;
     shadeCell(cell);
 
 
 }
+
+// TODO : add shading by dragging
