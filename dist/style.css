@@ -1,3 +1,20 @@
 body {
     overflow: hidden;
   }
+
+  #shading button {
+    height: 2em;
+    width: 2em;
+  }
+
+  #shading {
+    margin-bottom: 1em;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .selected {
+    box-shadow: 0 0 0 0.125em rgba(50,115,220,.25);
+  }
