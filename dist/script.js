@@ -3,13 +3,25 @@ let selectedShade = '';
 let offset;
 let size;
 let numLines;
+let isDragging = false;
+const numLinesInput = document.getElementById("numCells");
 const canvas = document.getElementById("canvas");
-canvas.addEventListener("click", shade);
+canvas.addEventListener("mousedown", startDrag);
+canvas.addEventListener("mouseup", endDrag);
+canvas.addEventListener('mousemove', shade);
+numLinesInput.addEventListener('keydown', updateGrid);
+
+drawLines();
+
+function updateGrid(e){
+    if(e.keyCode === 13){
+        drawLines();
+    }
+}
 
 
 function drawLines() {
-    showShading();
-    numLines = parseInt(document.getElementById("numCells").value);
+    numLines = parseInt(numLinesInput.value);
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
     if (canvas.width !== width || canvas.height !== height) {
@@ -84,9 +96,6 @@ function savepdf() {
     canvas.style.visibility = "visible";
 }
 
-function showShading() {
-    document.getElementById('shading').classList.remove('hidden');
-}
 
 function selectShade(el) {
     addSelected(el);
@@ -127,18 +136,51 @@ function getCell(pos) {
 
 }
 
+function startDrag(event){
+    isDragging = true;
 
-function shade(event) {
+}
 
+function endDrag(event){
+    isDragging = false;
     const pos = getPosition(event);
-    if(pos.x < 0 || pos.y < 0){
+    if(isOutOfBounds(pos)){
         return
     }
     const cell = getCell(pos);
     cell.fillStyle = selectedShade;
     shadeCell(cell);
+}
 
 
+ function shade(event) {
+    if(isDragging){
+        const pos = getPosition(event);
+        if(isOutOfBounds(pos)){
+            isDragging = false;
+            return
+        }
+        const cell = getCell(pos);
+        if(cell){
+            cell.fillStyle = selectedShade;
+            shadeCell(cell);
+        } else {
+            isDragging = false;
+        }
+    }
+
+
+}
+
+function isOutOfBounds(pos){
+    const outBefore = (pos.x < 0 || pos.y < 0);
+    const outAfter = (pos.y > (800 - offset) || pos.x > (800 - offset));
+    return outBefore || outAfter;
+}
+
+function resetGrid(){
+    grid = [];
+    drawLines();
 }
 
 // TODO : add shading by dragging
