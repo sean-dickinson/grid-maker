@@ -7,8 +7,8 @@ https://grid-maker-1a221.firebaseapp.com
 ### Features to add
 - [x] ability to shade
 - [x] ability to select color (for shading)
-- [ ] ability to shade by dragging
+- [x] ability to shade by dragging
+- [x] ability to clear the grid
 - [ ] colorpicker rather than preset colors
 - [ ] ability to hide the grid
 - [ ] ability to change grid color
-- [ ] ability to clear the grid
