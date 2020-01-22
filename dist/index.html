@@ -26,12 +26,13 @@
                     <input type="number" class="input" id="numCells" value="9" />
                 </div>
             </div>
-            <button class="button" onclick="drawLines()">Preview</button>
             <button class="button" onclick="savepdf()">Save</button>
+            <button class="button" onclick="resetGrid()">Clear</button>
+
         </div>
     </section>
     <section class="section">
-        <div id="shading" class="container hidden has-text-centered">
+        <div id="shading" class="container has-text-centered">
             <h3>Shading</h3>
             <div>
                 <button onclick="selectShade(this)" class="button has-background-black is-focused"></button>
