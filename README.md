@@ -12,3 +12,4 @@ https://grid-maker-1a221.firebaseapp.com
 - [x] ability to hide the grid
 - [ ] colorpicker rather than preset colors
 - [ ] ability to change grid color
+- [ ] save designs to local storage or similar
