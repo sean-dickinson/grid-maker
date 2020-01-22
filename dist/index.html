@@ -1,52 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Grid Maker</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js" defer></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js"
+      defer
+    ></script>
     <script src="script.js" defer></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <section class="section">
-        <h1 class="title">Grid Maker</h1>
-        <p class="subtitle">Create a grid of any size and download the result as a pdf sized for 8.5 x 11 standard
-            letter paper</p>
+      <h1 class="title">Grid Maker</h1>
+      <p class="subtitle">
+        Create a grid of any size and download the result as a pdf sized for 8.5
+        x 11 standard letter paper
+      </p>
     </section>
     <section class="section">
-        <div class="container">
-            <div class="field">
-                <label class="label">Number of cells in a row</label>
-                <div class="control">
-                    <input type="number" class="input" id="numCells" value="9" />
-                </div>
+      <div class="container">
+        <div class="field">
+          <label class="label">Number of cells in a row</label>
+          <div class="control">
+            <input type="number" class="input" id="numCells" value="9" />
+          </div>
+        </div>
+        <div class="level">
+          <div class="level-left">
+            <div class="level-item">
+              <button class="button" onclick="savepdf()">Save</button>
             </div>
-            <button class="button" onclick="savepdf()">Save</button>
-            <button class="button" onclick="resetGrid()">Clear</button>
-
+            <div class="level-item">
+              <button class="button" onclick="resetGrid()">Clear</button>
+            </div>
+            <div class="level-item">
+              <label class="checkbox">
+                <input type="checkbox" checked id="showGrid" />
+                Show Gridlines
+              </label>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
     <section class="section">
-        <div id="shading" class="container has-text-centered">
-            <h3>Shading</h3>
-            <div>
-                <button onclick="selectShade(this)" class="button has-background-black is-focused"></button>
-                <button onclick="selectShade(this)" class="button has-background-primary"></button>
-                <button onclick="selectShade(this)" class="button has-background-link"></button>
-                <button onclick="selectShade(this)" class="button has-background-warning"></button>
-                <button onclick="selectShade(this)" class="button has-background-danger"></button>
-                <button onclick="selectShade(this)" class="button"></button>
-            </div>
+      <div id="shading" class="container has-text-centered">
+        <h3>Shading</h3>
+        <div>
+          <button
+            onclick="selectShade(this)"
+            class="button has-background-black is-focused"
+          ></button>
+          <button
+            onclick="selectShade(this)"
+            class="button has-background-primary"
+          ></button>
+          <button
+            onclick="selectShade(this)"
+            class="button has-background-link"
+          ></button>
+          <button
+            onclick="selectShade(this)"
+            class="button has-background-warning"
+          ></button>
+          <button
+            onclick="selectShade(this)"
+            class="button has-background-danger"
+          ></button>
+          <button onclick="selectShade(this)" class="button"></button>
         </div>
-        <div class="container has-text-centered">
-            <canvas id="canvas" width="800" height="800"></canvas>
-        </div>
+      </div>
+      <div class="container has-text-centered">
+        <canvas id="canvas" width="800" height="800"></canvas>
+      </div>
     </section>
-</body>
-
+  </body>
 </html>
