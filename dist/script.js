@@ -170,8 +170,9 @@ function endDrag(event) {
   if (isOutOfBounds(pos)) {
     return;
   }
+  const isShift = event.shiftKey;
   const cell = getCell(pos);
-  cell.fillStyle = selectedShade;
+  cell.fillStyle = isShift ? '#fff' : selectedShade;
   shadeCell(cell);
 }
 
@@ -182,9 +183,10 @@ function shade(event) {
       isDragging = false;
       return;
     }
+    const isShift = event.shiftKey;
     const cell = getCell(pos);
     if (cell) {
-      cell.fillStyle = selectedShade;
+      cell.fillStyle = isShift ? '#fff' : selectedShade;
       shadeCell(cell);
     } else {
       isDragging = false;

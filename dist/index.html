@@ -57,11 +57,15 @@
     </section>
     <section class="section">
       <div id="shading" class="container has-text-centered">
-        <h3>Shading</h3>
+        <h3>Shading Color</h3>
         <div>
-          <input type="color" oninput="selectShade(this.value)" value="#00d1b2">
-          <button onclick="selectShade('white')" class="button"></button>
+          <input
+            type="color"
+            oninput="selectShade(this.value)"
+            value="#00d1b2"
+          />
         </div>
+        <p>Click or drag to shade, shift-click to remove shading</p>
       </div>
       <div class="container has-text-centered">
         <canvas id="canvas" width="800" height="800"></canvas>
