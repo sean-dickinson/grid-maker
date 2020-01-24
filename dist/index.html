@@ -59,27 +59,8 @@
       <div id="shading" class="container has-text-centered">
         <h3>Shading</h3>
         <div>
-          <button
-            onclick="selectShade(this)"
-            class="button has-background-black is-focused"
-          ></button>
-          <button
-            onclick="selectShade(this)"
-            class="button has-background-primary"
-          ></button>
-          <button
-            onclick="selectShade(this)"
-            class="button has-background-link"
-          ></button>
-          <button
-            onclick="selectShade(this)"
-            class="button has-background-warning"
-          ></button>
-          <button
-            onclick="selectShade(this)"
-            class="button has-background-danger"
-          ></button>
-          <button onclick="selectShade(this)" class="button"></button>
+          <input type="color" oninput="selectShade(this.value)" value="#00d1b2">
+          <button onclick="selectShade('white')" class="button"></button>
         </div>
       </div>
       <div class="container has-text-centered">

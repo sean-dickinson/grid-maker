@@ -1,6 +1,6 @@
 // defining and initializing global variables
 let grid = [];
-let selectedShade = "";
+let selectedShade = "#00d1b2";
 let offset;
 let size;
 let numLines;
@@ -130,20 +130,10 @@ function savepdf() {
   canvas.style.visibility = "visible";
 }
 
-function selectShade(el) {
-  addSelected(el);
-  selectedShade = window
-    .getComputedStyle(el)
-    .getPropertyValue("background-color");
+function selectShade(color) {
+  selectedShade = color;
 }
 
-function addSelected(el) {
-  const element = document.querySelector(".is-focused");
-  if (element) {
-    element.classList.remove("is-focused");
-  }
-  el.classList.add("is-focused");
-}
 
 function getPosition(event) {
   const rect = canvas.getBoundingClientRect();
