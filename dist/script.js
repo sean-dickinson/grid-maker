@@ -20,6 +20,9 @@ canvas.addEventListener("mousemove", shade);
 numLinesInput.addEventListener("keydown", updateGrid);
 showGridCheckbox.addEventListener("change", renderGrid);
 
+// check local storage
+checkStorage();
+// draw grid
 renderGrid();
 
 function updateGrid(e) {
@@ -32,8 +35,8 @@ function renderGrid() {
   updateCanvasSize();
   clearCanvas();
   updateGridArray();
-  drawGridLines();
   shadeCells();
+  drawGridLines();
 }
 
 function updateCanvasSize() {
@@ -48,10 +51,9 @@ function updateCanvasSize() {
   offset = (width % numLines) / 2;
 }
 
-
 function clearCanvas() {
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 function updateGridArray() {
@@ -81,7 +83,6 @@ function updateGridArray() {
 function drawGridLines() {
   const ctx = canvas.getContext("2d");
   if (!showGridCheckbox.checked) {
-    console.log('here');
     return;
   }
 
@@ -99,14 +100,14 @@ function drawGridLines() {
   }
 }
 
-function shadeCells(){
-    for(const row of grid){
-        for(const cell of row){
-            if (cell.hasOwnProperty("fillStyle")) {
-                shadeCell(cell);
-              }
-        }
+function shadeCells() {
+  for (const row of grid) {
+    for (const cell of row) {
+      if (cell.hasOwnProperty("fillStyle")) {
+        shadeCell(cell);
+      }
     }
+  }
 }
 
 function savepdf() {
@@ -158,7 +159,8 @@ function shadeCell(cell) {
   ctx.beginPath();
   ctx.rect(cell.x + offset, cell.y + offset, size, size);
   ctx.fill();
-  ctx.stroke();
+  updateStorage();
+  drawGridLines();
 }
 
 function getCell(pos) {
@@ -208,5 +210,47 @@ function isOutOfBounds(pos) {
 
 function resetGrid() {
   grid = [];
+  deleteStorage();
   renderGrid();
+}
+
+function checkStorage() {
+  const savedGrid = window.localStorage.getItem("savedGrid");
+  if (savedGrid) {
+    grid = JSON.parse(savedGrid);
+    numLinesInput.value = grid.length;
+    showNotification();
+  }
+}
+
+function updateStorage() {
+  window.localStorage.setItem("savedGrid", JSON.stringify(grid));
+}
+
+function deleteStorage() {
+  window.localStorage.removeItem("savedGrid");
+}
+
+function showNotification() {
+  const notification = document.createElement("div");
+  notification.classList.add("notification");
+  notification.classList.add("is-info");
+  notification.classList.add("hidden");
+  notification.classList.add("fixed-notification");
+  const button = document.createElement("button");
+  button.classList.add("delete");
+  button.onclick = removeNotification;
+  notification.appendChild(button);
+  notification.appendChild(
+    document.createTextNode(
+      "We've loaded the last grid you were working on for you"
+    )
+  );
+  document.body.appendChild(notification);
+  setTimeout(() => notification.classList.remove('hidden'), 300);
+}
+
+function removeNotification(event) {
+  const element = event.toElement;
+  element.parentNode.remove();
 }

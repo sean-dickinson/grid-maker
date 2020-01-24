@@ -10,5 +10,6 @@ https://grid-maker-1a221.firebaseapp.com
 - [x] ability to shade by dragging
 - [x] ability to clear the grid
 - [x] ability to hide the grid
-- [ ] colorpicker rather than preset colors
+- [x] cache last worked on design in local storage
+- [ ] color-picker rather than preset colors
 - [ ] ability to change grid color
