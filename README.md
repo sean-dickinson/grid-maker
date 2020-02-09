@@ -11,5 +11,4 @@ https://grid-maker-1a221.firebaseapp.com
 - [x] ability to clear the grid
 - [x] ability to hide the grid
 - [x] cache last worked on design in local storage
-- [ ] color-picker rather than preset colors
-- [ ] ability to change grid color
+- [x] color-picker rather than preset colors

@@ -5,10 +5,19 @@ body {
 #shading button {
   height: 2em;
   width: 2em;
+  margin: 0.5em;
+}
+
+#usedColors {
+  height: 2.5em;
 }
 
 #shading {
   margin-bottom: 1em;
+}
+
+#shading h3{
+  margin: 0.5em 0;
 }
 
 .fixed-notification {

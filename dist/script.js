@@ -7,6 +7,7 @@ let numLines;
 let width;
 let height;
 let isDragging = false;
+let usedColors = [];
 
 // save references to important elements
 const numLinesInput = document.getElementById("numCells");
@@ -37,6 +38,7 @@ function renderGrid() {
   updateGridArray();
   shadeCells();
   drawGridLines();
+  updateUsedColors();
 }
 
 function updateCanvasSize() {
@@ -134,6 +136,50 @@ function selectShade(color) {
   selectedShade = color;
 }
 
+function buttonColorSelect(event){
+  const el = event.target;
+  const buttons = document.querySelectorAll('#usedColors .button');
+  for(const button of buttons){
+    button.classList.remove('is-focused');
+  }
+  
+  el.classList.add('is-focused');
+  const color = el.dataset.color;
+  selectedShade = color;
+
+}
+
+function updateUsedColors(){
+  const usedColorContainer = document.getElementById('usedColors');
+  usedColorContainer.innerHTML = '';
+  for(const color of usedColors){
+    const el = document.createElement('button');
+    el.classList.add('button');
+    el.style = `background-color: ${color}`;
+    el.dataset.color = color;
+    usedColorContainer.appendChild(el);
+    el.addEventListener('click', buttonColorSelect)
+  }
+}
+
+function usedColorRemove(color){
+  if(!color){
+    return
+  }
+  for (const row of grid) {
+    for (const cell of row) {
+      if(cell.hasOwnProperty('fillStyle')){
+        if(cell.fillStyle === color){
+          return
+        }
+      }
+    }
+  }
+  const i = usedColors.indexOf(color);
+  usedColors.splice(i, 1);
+  updateUsedColors();
+}
+
 
 function getPosition(event) {
   const rect = canvas.getBoundingClientRect();
@@ -145,7 +191,15 @@ function getPosition(event) {
 
 function shadeCell(cell) {
   const ctx = canvas.getContext("2d");
-  ctx.fillStyle = cell.fillStyle;
+  if(!cell.hasOwnProperty('fillStyle')){
+    ctx.fillStyle = '#fff';
+  } else {
+    ctx.fillStyle = cell.fillStyle;
+    if(!usedColors.includes(cell.fillStyle)){
+      usedColors.push(cell.fillStyle);
+      updateUsedColors();
+    }
+  }
   ctx.beginPath();
   ctx.rect(cell.x + offset, cell.y + offset, size, size);
   ctx.fill();
@@ -172,8 +226,14 @@ function endDrag(event) {
   }
   const isShift = event.shiftKey;
   const cell = getCell(pos);
-  cell.fillStyle = isShift ? '#fff' : selectedShade;
+  const color = cell.fillStyle;
+  if(isShift){
+    delete cell.fillStyle;
+  } else {  
+    cell.fillStyle = selectedShade;
+  }
   shadeCell(cell);
+  usedColorRemove(color);
 }
 
 function shade(event) {
@@ -186,8 +246,14 @@ function shade(event) {
     const isShift = event.shiftKey;
     const cell = getCell(pos);
     if (cell) {
-      cell.fillStyle = isShift ? '#fff' : selectedShade;
+      const color = cell.fillStyle;
+      if(isShift){
+        delete cell.fillStyle;
+      } else {
+        cell.fillStyle = selectedShade;
+      }
       shadeCell(cell);
+      usedColorRemove(color);
     } else {
       isDragging = false;
     }
@@ -204,6 +270,8 @@ function resetGrid() {
   grid = [];
   deleteStorage();
   renderGrid();
+  usedColors = [];
+  updateUsedColors();
 }
 
 function checkStorage() {
