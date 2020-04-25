@@ -1,5 +1,5 @@
 # grid-maker
-A simple web page designed to generate a printable grid of a custom size. 
+A simple web page designed to generate a printable grid of a custom size. This grid can be shaded in with colors of the users choice. The intention behind this page was to help teach students about fractal geometry.
 
 ## Live Version
 https://grid-maker-1a221.firebaseapp.com
