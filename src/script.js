@@ -3,13 +3,14 @@ import {jsPDF} from "./jspdf/jspdf.es.min.js";
 
 // defining and initializing global variables
 let grid = [];
-let selectedShade = "";
+let selectedShade = "#00d1b2";
 let offset;
 let size;
 let numLines;
 let width;
 let height;
 let isDragging = false;
+let usedColors = [];
 
 // save references to important elements
 const numLinesInput = document.getElementById("numCells");
@@ -25,12 +26,13 @@ showGridCheckbox.addEventListener("change", renderGrid);
 document.getElementById('save').addEventListener('click', savepdf);
 document.getElementById('reset').addEventListener('click', resetGrid);
 
-document.querySelectorAll('#shading .button').forEach(el => {
-  el.addEventListener("click", () => {
-    selectShade(el);
-  });
+document.getElementById('shadeInput').addEventListener('input', (e) => {
+  selectShade(e.target.value);
 })
 
+// check local storage
+checkStorage();
+// draw grid
 renderGrid();
 
 function updateGrid(e) {
@@ -43,8 +45,9 @@ function renderGrid() {
   updateCanvasSize();
   clearCanvas();
   updateGridArray();
-  drawGridLines();
   shadeCells();
+  drawGridLines();
+  updateUsedColors();
 }
 
 function updateCanvasSize() {
@@ -59,10 +62,9 @@ function updateCanvasSize() {
   offset = (width % numLines) / 2;
 }
 
-
 function clearCanvas() {
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 function updateGridArray() {
@@ -92,7 +94,6 @@ function updateGridArray() {
 function drawGridLines() {
   const ctx = canvas.getContext("2d");
   if (!showGridCheckbox.checked) {
-    console.log('here');
     return;
   }
 
@@ -110,14 +111,14 @@ function drawGridLines() {
   }
 }
 
-function shadeCells(){
-    for(const row of grid){
-        for(const cell of row){
-            if (cell.hasOwnProperty("fillStyle")) {
-                shadeCell(cell);
-              }
-        }
+function shadeCells() {
+  for (const row of grid) {
+    for (const cell of row) {
+      if (cell.hasOwnProperty("fillStyle")) {
+        shadeCell(cell);
+      }
     }
+  }
 }
 
 function savepdf() {
@@ -140,20 +141,54 @@ function savepdf() {
   canvas.style.visibility = "visible";
 }
 
-function selectShade(el) {
-  addSelected(el);
-  selectedShade = window
-    .getComputedStyle(el)
-    .getPropertyValue("background-color");
+function selectShade(color) {
+  selectedShade = color;
 }
 
-function addSelected(el) {
-  const element = document.querySelector(".is-focused");
-  if (element) {
-    element.classList.remove("is-focused");
+function buttonColorSelect(event){
+  const el = event.target;
+  const buttons = document.querySelectorAll('#usedColors .button');
+  for(const button of buttons){
+    button.classList.remove('is-focused');
   }
-  el.classList.add("is-focused");
+  
+  el.classList.add('is-focused');
+  const color = el.dataset.color;
+  selectedShade = color;
+
 }
+
+function updateUsedColors(){
+  const usedColorContainer = document.getElementById('usedColors');
+  usedColorContainer.innerHTML = '';
+  for(const color of usedColors){
+    const el = document.createElement('button');
+    el.classList.add('button');
+    el.style = `background-color: ${color}`;
+    el.dataset.color = color;
+    usedColorContainer.appendChild(el);
+    el.addEventListener('click', buttonColorSelect)
+  }
+}
+
+function usedColorRemove(color){
+  if(!color){
+    return
+  }
+  for (const row of grid) {
+    for (const cell of row) {
+      if(cell.hasOwnProperty('fillStyle')){
+        if(cell.fillStyle === color){
+          return
+        }
+      }
+    }
+  }
+  const i = usedColors.indexOf(color);
+  usedColors.splice(i, 1);
+  updateUsedColors();
+}
+
 
 function getPosition(event) {
   const rect = canvas.getBoundingClientRect();
@@ -165,11 +200,20 @@ function getPosition(event) {
 
 function shadeCell(cell) {
   const ctx = canvas.getContext("2d");
-  ctx.fillStyle = cell.fillStyle;
+  if(!cell.hasOwnProperty('fillStyle')){
+    ctx.fillStyle = '#fff';
+  } else {
+    ctx.fillStyle = cell.fillStyle;
+    if(!usedColors.includes(cell.fillStyle)){
+      usedColors.push(cell.fillStyle);
+      updateUsedColors();
+    }
+  }
   ctx.beginPath();
   ctx.rect(cell.x + offset, cell.y + offset, size, size);
   ctx.fill();
-  ctx.stroke();
+  updateStorage();
+  drawGridLines();
 }
 
 function getCell(pos) {
@@ -189,9 +233,16 @@ function endDrag(event) {
   if (isOutOfBounds(pos)) {
     return;
   }
+  const isShift = event.shiftKey;
   const cell = getCell(pos);
-  cell.fillStyle = selectedShade;
+  const color = cell.fillStyle;
+  if(isShift){
+    delete cell.fillStyle;
+  } else {  
+    cell.fillStyle = selectedShade;
+  }
   shadeCell(cell);
+  usedColorRemove(color);
 }
 
 function shade(event) {
@@ -201,10 +252,17 @@ function shade(event) {
       isDragging = false;
       return;
     }
+    const isShift = event.shiftKey;
     const cell = getCell(pos);
     if (cell) {
-      cell.fillStyle = selectedShade;
+      const color = cell.fillStyle;
+      if(isShift){
+        delete cell.fillStyle;
+      } else {
+        cell.fillStyle = selectedShade;
+      }
       shadeCell(cell);
+      usedColorRemove(color);
     } else {
       isDragging = false;
     }
@@ -219,5 +277,49 @@ function isOutOfBounds(pos) {
 
 function resetGrid() {
   grid = [];
+  deleteStorage();
   renderGrid();
+  usedColors = [];
+  updateUsedColors();
+}
+
+function checkStorage() {
+  const savedGrid = window.localStorage.getItem("savedGrid");
+  if (savedGrid) {
+    grid = JSON.parse(savedGrid);
+    numLinesInput.value = grid.length;
+    showNotification();
+  }
+}
+
+function updateStorage() {
+  window.localStorage.setItem("savedGrid", JSON.stringify(grid));
+}
+
+function deleteStorage() {
+  window.localStorage.removeItem("savedGrid");
+}
+
+function showNotification() {
+  const notification = document.createElement("div");
+  notification.classList.add("notification");
+  notification.classList.add("is-info");
+  notification.classList.add("hidden");
+  notification.classList.add("fixed-notification");
+  const button = document.createElement("button");
+  button.classList.add("delete");
+  button.onclick = removeNotification;
+  notification.appendChild(button);
+  notification.appendChild(
+    document.createTextNode(
+      "We've loaded the last grid you were working on for you"
+    )
+  );
+  document.body.appendChild(notification);
+  setTimeout(() => notification.classList.remove('hidden'), 300);
+}
+
+function removeNotification(event) {
+  const element = event.toElement;
+  element.parentNode.remove();
 }
