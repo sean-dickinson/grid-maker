@@ -1,0 +1,30 @@
+{
+  "name": "grid-maker",
+  "version": "1.0.0",
+  "description": "A tool made to teach fractals using a simple grid and colors",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atinybeardedman/grid-maker.git"
+  },
+  "author": "Sean Dickinson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/atinybeardedman/grid-maker/issues"
+  },
+  "homepage": "https://github.com/atinybeardedman/grid-maker#readme",
+  "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "jspdf": "^2.1.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0"
+  }
+}
