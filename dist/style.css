@@ -1,16 +1,34 @@
 body {
-    overflow: hidden;
-  }
+  overflow: hidden;
+}
 
-  #shading button {
-    height: 2em;
-    width: 2em;
-  }
+#shading button {
+  height: 2em;
+  width: 2em;
+  margin: 0.5em;
+}
 
-  #shading {
-    margin-bottom: 1em;
-  }
+#usedColors {
+  height: 2.5em;
+}
 
-  .hidden {
-    display: none;
-  }
+#shading {
+  margin-bottom: 1em;
+}
+
+#shading h3{
+  margin: 0.5em 0;
+}
+
+.fixed-notification {
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s 0.1s linear, visibility 0s;
+}
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+}

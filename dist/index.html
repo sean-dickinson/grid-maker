@@ -47,19 +47,18 @@
   </section>
   <section class="section">
     <div id="shading" class="container has-text-centered">
-      <h3>Shading</h3>
+      <h3>Shading Color</h3>
       <div>
-        <button class="button has-background-black is-focused"></button>
-        <button class="button has-background-primary"></button>
-        <button class="button has-background-link"></button>
-        <button class="button has-background-warning"></button>
-        <button class="button has-background-danger"></button>
-        <button class="button"></button>
+        <input type="color" id="shadeInput" value="#00d1b2" />
       </div>
+      <h3>Used Colors</h3>
+      <div id="usedColors"></div>
+      <p>Click or drag to shade, shift-click to remove shading</p>
     </div>
-    <div class="container has-text-centered">
-      <canvas id="canvas" width="800" height="800"></canvas>
-    </div>
+  </section>
+  <div class="container has-text-centered">
+    <canvas id="canvas" width="800" height="800"></canvas>
+  </div>
   </section>
 </body>
 
