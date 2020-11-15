@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>Grid Maker</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css" />
   <link rel="stylesheet" href="style.css" />
   <script src="script.js" type="module"></script>
 </head>
@@ -19,7 +19,7 @@
       x 11 standard letter paper
     </p>
   </section>
-  <section class="section">
+  <section class="section p-0">
     <div class="container">
       <div class="field">
         <label class="label">Number of cells in a row</label>
@@ -47,19 +47,18 @@
   </section>
   <section class="section">
     <div id="shading" class="container has-text-centered">
-      <h3>Shading</h3>
+      <h3>Shading Color</h3>
       <div>
-        <button class="button has-background-black is-focused"></button>
-        <button class="button has-background-primary"></button>
-        <button class="button has-background-link"></button>
-        <button class="button has-background-warning"></button>
-        <button class="button has-background-danger"></button>
-        <button class="button"></button>
+        <input type="color" id="shadeInput" value="#00d1b2" />
       </div>
+      <h3>Used Colors</h3>
+      <div id="usedColors"></div>
+      <p>Click or drag to shade, shift-click to remove shading</p>
     </div>
-    <div class="container has-text-centered">
-      <canvas id="canvas" width="800" height="800"></canvas>
-    </div>
+  </section>
+  <div class="container has-text-centered">
+    <canvas id="canvas" width="800" height="800"></canvas>
+  </div>
   </section>
 </body>
 
