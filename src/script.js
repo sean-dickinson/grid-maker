@@ -1,4 +1,3 @@
-// import jspdf
 import {jsPDF} from "./jspdf/jspdf.es.min.js";
 
 // defining and initializing global variables
@@ -16,6 +15,7 @@ let usedColors = [];
 const numLinesInput = document.getElementById("numCells");
 const showGridCheckbox = document.getElementById("showGrid");
 const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext('2d');
 
 // adding event listeners
 canvas.addEventListener("mousedown", startDrag);
@@ -23,7 +23,8 @@ canvas.addEventListener("mouseup", endDrag);
 canvas.addEventListener("mousemove", shade);
 numLinesInput.addEventListener("keydown", updateGrid);
 showGridCheckbox.addEventListener("change", renderGrid);
-document.getElementById('save').addEventListener('click', savepdf);
+document.getElementById('savePDF').addEventListener('click', savepdf);
+document.getElementById('savePNG').addEventListener('click', savePNG);
 document.getElementById('reset').addEventListener('click', resetGrid);
 
 document.getElementById('shadeInput').addEventListener('input', (e) => {
@@ -46,7 +47,6 @@ function renderGrid() {
   clearCanvas();
   updateGridArray();
   shadeCells();
-  drawGridLines();
   updateUsedColors();
 }
 
@@ -81,7 +81,8 @@ function updateGridArray() {
       if (shouldCreateGrid) {
         grid[i].push({
           x: j * size,
-          y: size * i
+          y: size * i,
+          fillStyle: '#fff'
         });
       } else {
         grid[i][j].x = j * size;
@@ -91,37 +92,26 @@ function updateGridArray() {
   }
 }
 
-function drawGridLines() {
-  const ctx = canvas.getContext("2d");
-  if (!showGridCheckbox.checked) {
-    return;
-  }
-
-  for (let x = offset; x <= width - offset; x += size) {
-    ctx.beginPath();
-    ctx.moveTo(x, offset);
-    ctx.lineTo(x, width - offset);
-    ctx.stroke();
-  }
-  for (let y = offset; y <= width - offset; y += size) {
-    ctx.beginPath();
-    ctx.moveTo(offset, y);
-    ctx.lineTo(width - offset, y);
-    ctx.stroke();
-  }
-}
 
 function shadeCells() {
   for (const row of grid) {
     for (const cell of row) {
-      if (cell.hasOwnProperty("fillStyle")) {
         shadeCell(cell);
-      }
+      
     }
   }
 }
 
-function savepdf() {
+function savePNG(e){
+  const el = e.target;
+  const imgData = canvas.toDataURL("image/png", 1.0);
+  el.href = imgData;
+}
+
+function savepdf(e) {
+  const el = e.target;
+  el.classList.add('is-loading');
+  el.disabled = true;
   // hide the grid during resizing
   canvas.style.visibility = "hidden";
   canvas.style.width = "8.5in";
@@ -138,6 +128,8 @@ function savepdf() {
   canvas.style.width = "800px";
   canvas.style.height = "800px";
   renderGrid();
+  el.classList.remove('is-loading');
+  el.disabled = false;
   canvas.style.visibility = "visible";
 }
 
@@ -162,6 +154,9 @@ function updateUsedColors(){
   const usedColorContainer = document.getElementById('usedColors');
   usedColorContainer.innerHTML = '';
   for(const color of usedColors){
+    if(!color || color === '#fff'){
+      continue
+    }
     const el = document.createElement('button');
     el.classList.add('button');
     el.style = `background-color: ${color}`;
@@ -199,21 +194,19 @@ function getPosition(event) {
 }
 
 function shadeCell(cell) {
-  const ctx = canvas.getContext("2d");
-  if(!cell.hasOwnProperty('fillStyle')){
-    ctx.fillStyle = '#fff';
-  } else {
     ctx.fillStyle = cell.fillStyle;
     if(!usedColors.includes(cell.fillStyle)){
       usedColors.push(cell.fillStyle);
       updateUsedColors();
     }
-  }
+  
   ctx.beginPath();
   ctx.rect(cell.x + offset, cell.y + offset, size, size);
+  
   ctx.fill();
-  updateStorage();
-  drawGridLines();
+    if (showGridCheckbox.checked) {
+      ctx.stroke();
+    }
 }
 
 function getCell(pos) {
@@ -237,12 +230,13 @@ function endDrag(event) {
   const cell = getCell(pos);
   const color = cell.fillStyle;
   if(isShift){
-    delete cell.fillStyle;
+    cell.fillStyle = '#fff';
   } else {  
     cell.fillStyle = selectedShade;
   }
   shadeCell(cell);
   usedColorRemove(color);
+  updateStorage();
 }
 
 function shade(event) {
@@ -275,12 +269,15 @@ function isOutOfBounds(pos) {
   return outBefore || outAfter;
 }
 
-function resetGrid() {
+function resetGrid(e) {
+  const el = e.target;
+  el.classList.add('is-loading');
   grid = [];
   deleteStorage();
   renderGrid();
   usedColors = [];
   updateUsedColors();
+  el.classList.remove('is-loading');
 }
 
 function checkStorage() {
