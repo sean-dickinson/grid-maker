@@ -318,6 +318,6 @@ function showNotification() {
 }
 
 function removeNotification(event) {
-  const element = event.toElement;
+  const element = event.target;
   element.parentNode.remove();
 }
