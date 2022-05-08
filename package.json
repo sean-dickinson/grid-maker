@@ -4,6 +4,7 @@
   "description": "A tool made to teach fractals using a simple grid and colors",
   "main": "index.js",
   "scripts": {
+    "build": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
