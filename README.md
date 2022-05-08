@@ -12,3 +12,12 @@ https://grid-maker-1a221.firebaseapp.com
 - [x] ability to hide the grid
 - [x] cache last worked on design in local storage
 - [x] color-picker rather than preset colors
+
+## Local Development
+
+In order to run this application locally you need the firebase-cli set up so you can test the hosting via the firebase server. 
+
+- Clone the repo
+- Run `npm install`
+- Run `npm run build` (needed to package the pdf library for the browser)
+- Run `firebase serve`
