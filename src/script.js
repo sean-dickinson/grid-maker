@@ -20,6 +20,7 @@ const ctx = canvas.getContext('2d');
 // adding event listeners
 canvas.addEventListener("mousedown", startDrag);
 canvas.addEventListener("mouseup", endDrag);
+canvas.addEventListener("mouseout", endDrag);
 canvas.addEventListener("mousemove", shade);
 numLinesInput.addEventListener("keydown", updateGrid);
 showGridCheckbox.addEventListener("change", renderGrid);
